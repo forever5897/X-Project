@@ -6,8 +6,10 @@ int main()
 {
     ReadStl obj;
 
-    obj.readAscii("../ReadStl/SphereASCII.stl");
+//    obj.isAscii("../ReadStl/SphereBinary.stl");
+//    obj.readAscii("../ReadStl/SphereBinary.stl");
 
+    obj.read("../ReadStl/SphereBinary.stl");
     for(int i=0; i<obj.m_triPt.size(); i++)
     {
         cout << obj.m_triPt[i].normal.x << endl;

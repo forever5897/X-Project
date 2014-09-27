@@ -3,7 +3,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
-#include <list>
+#include <exception>
 #include "../math/simpletriangle.h"
 
 using namespace std;

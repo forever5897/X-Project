@@ -21,16 +21,30 @@ bool ReadStl::isAscii(string fileName)
         return 0;
     else
     {
-        file >> temp_str;
-        if(temp_str == "solid")
+        for(int i=0; i<3; i++)
+        {
+            file >> temp_str;
+        }
+        if(temp_str != "facet")
             return 0;
         else
             return 1;
     }
 
-    //test
-    ReadStl *temp;
-    temp->readAscii(fileName);
+/*test
+//    ReadStl *temp = new ReadStl();
+//    try{
+//        temp->readAscii(fileName);
+//    } catch(exception &err) {
+
+//        cout << " " << err.what() <<endl;
+//        delete temp;
+//        return 0;
+//    }
+
+//    delete temp;
+//    return 1;
+*/
 }
 
 bool ReadStl::isBinary(string fileName)
