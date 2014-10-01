@@ -12,18 +12,10 @@ Matrix4d::Matrix4d(bool isZero)
 {
     if(isZero)
         return;
-    m[0] = 1;
-    m[5] = 1;
-    m[10] = 1;
-    m[15] = 1;
-}
-
-Matrix4d::Matrix4d(double scale)
-{
-    m[0] = scale;
-    m[5] = scale;
-    m[10] = scale;
-    m[15] = 1;
+    mat[0] = 1;
+    mat[5] = 1;
+    mat[10] = 1;
+    mat[15] = 1;
 }
 
 Matrix4d::Matrix4d(double mat[])
@@ -64,10 +56,10 @@ Matrix4d::Matrix4d(AxisAngle4d aa)
     resetRotate(aa);
 }
 
-Matrix4d::set(double mat00, double mat01, double mat02, double mat03,
-              double mat10, double mat11, double mat12, double mat13,
-              double mat20, double mat21, double mat22, double mat23,
-              double mat30, double mat31, double mat32, double mat33)
+void Matrix4d::set(double mat00, double mat01, double mat02, double mat03,
+                   double mat10, double mat11, double mat12, double mat13,
+                   double mat20, double mat21, double mat22, double mat23,
+                   double mat30, double mat31, double mat32, double mat33)
 {
     mat[0] = mat00;
     mat[1] = mat10;
@@ -87,24 +79,7 @@ Matrix4d::set(double mat00, double mat01, double mat02, double mat03,
     mat[15] = mat33;
 }
 
-Matrix4d::set(Matrix4d src)
-{
-    for(int i=0; i<16; i++)
-        this->mat[i] = src.mat[i];
-    return this;
-}
-
-double Matrix4d::at(int i, int j)
-{
-    return m[i + j * 4];
-}
-
-void Matrix4d::set(int i, int j, double v)
-{
-    m[i + j * 4] = v;
-}
-
-Matrix4d::setIdentity()
+void Matrix4d::setIdentity()
 {
     mat[0] = 1;
     mat[1] = 0;
@@ -127,48 +102,40 @@ Matrix4d::setIdentity()
     mat[15] = 1;
 }
 
-//Uncheck
-double Matrix4d::getDot(Matrix4d mat)
+void Matrix4d::resetRotate(Vector3d axis, double rad)
 {
-    double sum = 0;
-    for(int i=0; i<16; i++)
-        sum += this->mat[i] * mat.mat[i];
-    return sum;
+    double c=cos(rad);
+    double _c=(1-c);
+    double s=sin(rad);
+
+    mat[0] = _c * (axis.x * axis.x) + c;
+    mat[1] = _c * axis.x * axis.y + s * axis.z;
+    mat[2] = _c * axis.x * axis.z - s * axis.y;
+    mat[3] = 0;
+    mat[4] = _c * axis.x * axis.y - s * axis.z;
+    mat[5] = _c * (axis.y * axis.y) + c;
+    mat[6] = _c * axis.y * axis.z + s * axis.x;
+    mat[7] = 0;
+    mat[8] = _c * axis.x * axis.z + s * axis.y;
+    mat[9] = _c * axis.y * axis.z - s * axis.x;
+    mat[10] = _c * (axis.z * axis.z) + c;
+    mat[11] = 0;
+    mat[12] = 0;
+    mat[13] = 0;
+    mat[14] = 0;
+    mat[15] = 1;
 }
 
-Matrix4d::transpose()
+void Matrix4d::resetRotate(AxisAngle4d aa)
 {
-    double t;
-    t = m[1];
-    m[1] = m[4];
-    m[4] = t;
-
-    t = m[2];
-    m[2] = m[8];
-    m[8] = t;
-
-    t = m[3];
-    m[3] = m[12];
-    m[12] = t;
-
-    t = m[6];
-    m[6] = m[5];
-    m[5] = t;
-
-    t = m[7];
-    m[7] = m[13];
-    m[13] = t;
-
-    t = m[11];
-    m[11] = m[14];
-    m[14] = t;
-
-    return this;
+    resetRotate(aa.axis, aa.radian);
 }
 
-
-
-
-
-
+void Matrix4d::resetTranslate(Vector3d v)
+{
+    setIdentity();
+    mat[12] = v.x;
+    mat[13] = v.y;
+    mat[14] = v.z;
+}
 
